@@ -1,9 +1,28 @@
   // function for when the 'cat button id' is clicked
-    $("#pokemon-button").on("click", function() {
+    $("#search-button").on("click", function() {
+      event.preventDefault();
 
+      var searchChoice = $("#search-param").val();
+
+      var button = $("<button>");
+      button.text(searchChoice);
+      button.attr("class", "btn btn-primary search");
+      button.attr("data-search", searchChoice);
+      $("#button-spot").append(button);
       //grabs random gif about a cat
-      // var queryURL = "http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=pokemon";
-      var queryURL = "http://api.giphy.com/v1/gifs/search?q=pokemon&api_key=dc6zaTOxFJmzC"
+
+      giphySerach(searchChoice);
+
+    });
+
+    $("body").on("click",".search", function() {
+      var searchChoice = $(this).attr("data-search");
+      giphySerach (searchChoice);
+    });
+
+function giphySerach (searchID) {
+        // var queryURL = "http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=pokemon";
+      var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + searchID + "&api_key=dc6zaTOxFJmzC"
 
       // ajax function that goes to giphy and pulls random gifs
       $.ajax({
@@ -14,16 +33,19 @@
       //function for when ajax returns done
       .done(function(response) {
 
-        console.log(response);
+        $("#images").empty();
         for (var i = 0 ; i < 11; i++) {
         //variable to store a url generated from giphy
           var gifURL = response.data[i].images.fixed_height.url;
           var stillURL = response.data[i].images.fixed_height_still.url;
+          var gifRating = response.data[i].rating;
 
           //creates an imgtag holder
           var pokemonImage = $("<img>");
-          var imageHolder = $("<div>");
+          var imageHolder = $("<div>"); 
+          var ratingHolder = $("<p>");
 
+          ratingHolder.text("Rating: " + gifRating);
           // attacks an alt and the img to the new img tag
           pokemonImage.attr("src", stillURL);
           pokemonImage.attr("alt", "pokemon image");
@@ -33,13 +55,14 @@
           pokemonImage.attr("data-state",'still');
           pokemonImage.attr("class","pokemon-gif");
           imageHolder.attr("class","well");
+          // imageHolder.append(ratingHolder);
+          imageHolder.append(pokemonImage);
 
           //adds the img above older images 
-          $("#images").prepend(pokemonImage);
+          $("#images").prepend(imageHolder);
         }
       });
-    });
-
+}
 
     $("body").on("click",".pokemon-gif" , function() {
       // STEP ONE: study the html above.

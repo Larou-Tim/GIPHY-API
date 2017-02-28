@@ -2,3 +2,31 @@
 	height:200px;
 	width: 200px;
 }
+
+@font-face {
+    font-family: pokemonFont;
+    src: url(PokemonGB.ttf);
+}
+
+body {
+	font-family: pokemonFont;
+	
+}
+
+p {
+	font-size: 6px;
+}
+
+.btn {
+	font-size: 10px;
+}
+#search-param {
+	font-size: 10px;
+}
+
+.well {
+	width: 240px;
+	float: left;
+	margin-right: 15px;
+	/*height: auto;*/
+}
