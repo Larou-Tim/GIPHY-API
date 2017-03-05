@@ -1,6 +1,7 @@
 .pokemon-gif {
 	height:200px;
 	width: 200px;
+	display:block;
 }
 
 @font-face {
@@ -22,6 +23,7 @@ p {
 }
 #search-param {
 	font-size: 10px;
+	max-width: 400px;
 }
 
 .well {
@@ -29,4 +31,38 @@ p {
 	float: left;
 	margin-right: 15px;
 	/*height: auto;*/
+}
+
+#search-button {
+	height:34px;
+}
+
+#button-spot {
+	margin-top: 15px;
+}
+.search {
+	margin-right: 10px;
+}
+
+
+
+/*.imageHolder {
+  position: relative;
+  width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}*/
+./*imageHolder video {
+  width: 100%;
+  display: block;
+}*/
+.imageHolder:before {
+  content: '';
+  position: absolute;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }

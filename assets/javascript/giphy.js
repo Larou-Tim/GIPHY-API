@@ -1,82 +1,104 @@
-  // function for when the 'cat button id' is clicked
-    $("#search-button").on("click", function() {
-      event.preventDefault();
+$(document).ready(function() {
 
-      var searchChoice = $("#search-param").val();
+  var initialSearchIcons = ['Pikachu', 'Charizard', 'Dragonite', 'Gyarados','Magikarp']
 
-      var button = $("<button>");
-      button.text(searchChoice);
-      button.attr("class", "btn btn-primary search");
-      button.attr("data-search", searchChoice);
-      $("#button-spot").append(button);
-      //grabs random gif about a cat
+  for (var i = 0; i < initialSearchIcons.length; i++) {
+    var searchChoice = initialSearchIcons[i];
+    var button = $("<button>");
+    button.text(searchChoice);
+    button.attr("class", "btn btn-primary search");
+    button.attr("data-search", searchChoice);
+    $("#button-spot").append(button);
+  }
 
-      giphySerach(searchChoice);
+});
 
-    });
 
-    $("body").on("click",".search", function() {
-      var searchChoice = $(this).attr("data-search");
-      giphySerach (searchChoice);
-    });
+$("#search-button").on("click", function() {
+
+  initialSearch();
+
+});
+
+$("body").on("click",".search", function() {
+  var searchChoice = $(this).attr("data-search");
+  giphySerach (searchChoice);
+
+});
+
+
+$(document).keypress(function(e) {
+    if(e.which == 13) {
+        initialSearch();
+    }
+});
+
+
+function initialSearch (searchParam) {
+
+  var searchChoice = searchParam || $("#search-param").val().trim();
+
+
+  var button = $("<button>");
+  button.text(searchChoice);
+  button.attr("class", "btn btn-primary search");
+  button.attr("data-search", searchChoice);
+  $("#button-spot").append(button);
+ 
+
+  giphySerach(searchChoice);
+}
 
 function giphySerach (searchID) {
-        // var queryURL = "http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=pokemon";
-      var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + searchID + "&api_key=dc6zaTOxFJmzC"
+    
+  var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + searchID + "&api_key=dc6zaTOxFJmzC"
+  
+  $.ajax({
+    url: queryURL,
+    method: "GET"
+  })
 
-      // ajax function that goes to giphy and pulls random gifs
-      $.ajax({
-        url: queryURL,
-        method: "GET"
-      })
+  .done(function(response) {
 
-      //function for when ajax returns done
-      .done(function(response) {
+    $("#images").empty();
+    for (var i = 0 ; i < 11; i++) {
+    
+      var gifURL = response.data[i].images.fixed_height.url;
+      var stillURL = response.data[i].images.fixed_height_still.url;
+      var gifRating = response.data[i].rating;
 
-        $("#images").empty();
-        for (var i = 0 ; i < 11; i++) {
-        //variable to store a url generated from giphy
-          var gifURL = response.data[i].images.fixed_height.url;
-          var stillURL = response.data[i].images.fixed_height_still.url;
-          var gifRating = response.data[i].rating;
+      
+      var pokemonImage = $("<img>");
+      var imageHolder = $("<div>"); 
+      var ratingHolder = $("<p>");
 
-          //creates an imgtag holder
-          var pokemonImage = $("<img>");
-          var imageHolder = $("<div>"); 
-          var ratingHolder = $("<p>");
+      ratingHolder.text("Rating: " + gifRating);
+      
+      pokemonImage.attr("src", stillURL);
+      pokemonImage.attr("alt", "pokemon image");
+      pokemonImage.attr("class","pokemon-gif");
+      pokemonImage.attr("data-still",stillURL);
+      pokemonImage.attr("data-animate",gifURL);
+      pokemonImage.attr("data-state",'still');
+      pokemonImage.attr("class","pokemon-gif");
+      imageHolder.attr("class","well");
 
-          ratingHolder.text("Rating: " + gifRating);
-          // attacks an alt and the img to the new img tag
-          pokemonImage.attr("src", stillURL);
-          pokemonImage.attr("alt", "pokemon image");
-          pokemonImage.attr("class","pokemon-gif");
-          pokemonImage.attr("data-still",stillURL);
-          pokemonImage.attr("data-animate",gifURL);
-          pokemonImage.attr("data-state",'still');
-          pokemonImage.attr("class","pokemon-gif");
-          imageHolder.attr("class","well");
-          // imageHolder.append(ratingHolder);
-          imageHolder.append(pokemonImage);
+     
+      imageHolder.append(pokemonImage);
+      imageHolder.append(ratingHolder);
 
-          //adds the img above older images 
-          $("#images").prepend(imageHolder);
-        }
-      });
+    
+      $("#images").prepend(imageHolder);
+    }
+  });
 }
 
     $("body").on("click",".pokemon-gif" , function() {
-      // STEP ONE: study the html above.
-      // Look at all the data attributes.
-      // Run the file in the browser. Look at the images.
-
-      // After we complete steps 1 and 2 we'll be able to pause gifs from giphy.
-
-      // STEP TWO: make a variable named state and then store the image's data-state into it.
-      // Use the .attr() method for this.
+     
       var curState = $(this).attr("data-state");
       var animated = $(this).attr("data-animate");
       var stilled = $(this).attr("data-still");
-      // console.log(curState);
+     
       if (curState == 'still') {
         $(this).attr("data-state","animate");
         $(this).attr("src",animated);
@@ -87,3 +109,4 @@ function giphySerach (searchID) {
       }
 
     });
+
